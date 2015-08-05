@@ -8,25 +8,25 @@ sudo: false
 addons:
   apt:
     packages:
+      - gfortran
+      - libatlas-base-dev
+      - libatlas-dev
+      - liblapack-dev
+
+      # Speedup builds, particularly when USE_CHROOT=1
+      - eatmydata
+
+      # chroot dependencies
       #- g++-multilib
       #- gcc-multilib
-      - gfortran
       #- gfortran-multilib
-      - libatlas-base-dev
-#      - libatlas-base-dev:i386
-      - libatlas-dev
-#      - libatlas-dev:i386
-      - liblapack-dev
-#      - liblapack-dev:i386
-      # USE_DEBUG dependencies
-      - python3-dbg
-      - python3-nose
-      # chroot dependencies
       #- debootstrap
-      - eatmydata
       #- fakechroot
       #- fakeroot Already installed
 #      - libc6:i386
+#      - libatlas-base-dev:i386
+#      - libatlas-dev:i386
+#      - liblapack-dev:i386
 #      - libncurses:i386
 #      - libstdc++6:i386
       # - pbuilder
@@ -47,6 +47,7 @@ matrix:
 #      env: USE_CHROOT=1 ARCH=i386 DIST=trusty PYTHON=3.4
     - python: 3.2
       env: USE_DEBUG=1
+      addons: {apt: {packages: [python3-dbg, python3-nose]}}
     - python: 2.7
       env: NPY_SEPARATE_COMPILATION=0 PYTHON_OO=1
     - python: 3.4
