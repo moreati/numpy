@@ -20,6 +20,7 @@ addons:
 #      - liblapack-dev:i386
       # USE_DEBUG dependencies
       - python3-dbg
+      - python3-nose
       # chroot dependencies
       #- debootstrap
       - eatmydata

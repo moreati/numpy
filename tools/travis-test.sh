@@ -2,7 +2,7 @@
 set -o errexit
 set -o xtrace
 
-# travis boxes give you 1.5 cpus
+# Travis container based boxes give you 2 cpus
 export NPY_NUM_BUILD_JOBS=2
 
 # setup env
