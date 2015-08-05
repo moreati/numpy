@@ -1,3 +1,2 @@
 # coverage
-Cython --install-option="--no-cython-compile"
 nose

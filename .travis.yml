@@ -70,6 +70,7 @@ before_install:
   - pip install --upgrade pip setuptools
   # Dependencies & wheels are cached by pip as they're downloaded & built
   - pip install -r ../dev-requirements.txt
+  - pip install Cython --install-option="--no-cython-compile"
   - popd
 
 script:
