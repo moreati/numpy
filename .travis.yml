@@ -3,16 +3,15 @@
 language: python
 sudo: false
 
-# Travis restricts these packages to a whitelist, additions can be requested
+# Travis whitelists the packages we can install, we can request additions
 #   https://github.com/travis-ci/apt-package-whitelist
 addons:
   apt:
-    packages:
+    packages: &common_deps
       - gfortran
       - libatlas-base-dev
       - libatlas-dev
       - liblapack-dev
-
       # Speedup builds, particularly when USE_CHROOT=1
       - eatmydata
 
@@ -47,7 +46,12 @@ matrix:
 #      env: USE_CHROOT=1 ARCH=i386 DIST=trusty PYTHON=3.4
     - python: 3.2
       env: USE_DEBUG=1
-      addons: {apt: {packages: [python3-dbg, python3-nose]}}
+      addons:
+        apt:
+          packages:
+           - *common_deps
+           - python3-dbg
+           - python3-nose
     - python: 2.7
       env: NPY_SEPARATE_COMPILATION=0 PYTHON_OO=1
     - python: 3.4
