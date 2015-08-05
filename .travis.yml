@@ -8,6 +8,7 @@ sudo: false
 addons:
   apt:
     packages: &common_deps
+      - ccache
       - gfortran
       - libatlas-base-dev
       - libatlas-dev
@@ -32,6 +33,7 @@ addons:
 cache:
   directories:
     - $HOME/.cache/pip
+    - $HOME/.ccache
 
 python:
   - 2.6
@@ -66,6 +68,7 @@ matrix:
     - python: 2.7
       env: USE_WHEEL=1
 before_install:
+  - export PATH=/usr/lib/ccache:$PATH
   - uname -a
   - free -m
   - df -h
