@@ -19,7 +19,6 @@ addons:
       #- g++-multilib
       #- gcc-multilib
       #- gfortran-multilib
-      #- debootstrap
       #- fakechroot
       #- fakeroot Already installed
 #      - libc6:i386
@@ -42,8 +41,14 @@ python:
   - 3.5-dev
 matrix:
   include:
-#    - python: 3.3
-#      env: USE_CHROOT=1 ARCH=i386 DIST=trusty PYTHON=3.4
+    - python: 3.3
+      env: USE_CHROOT=1 ARCH=i386 DIST=trusty PYTHON=3.4
+      sudo: true
+      addons:
+        apt:
+          packages:
+            - *common_deps
+            - debootstrap
     - python: 3.2
       env: USE_DEBUG=1
       addons:

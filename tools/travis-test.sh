@@ -54,20 +54,16 @@ setup_chroot()
   # when travis updates to ubuntu 14.04
   DIR=$1
   set -u
-  fakechroot fakeroot debootstrap --variant=fakechroot \
-                       --include=fakeroot,build-essential,eatmydata \
-                       --arch=$ARCH --foreign \
-                       $DIST $DIR
-  fakechroot fakeroot chroot $DIR ./debootstrap/debootstrap --second-stage
-  rsync -a $TRAVIS_BUILD_DIR $DIR/
-  tee $DIR/etc/apt/sources.list << EOF
-deb http://archive.ubuntu.com/ubuntu/ $DIST main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ $DIST-updates main restricted universe multiverse
-deb http://security.ubuntu.com/ubuntu $DIST-security  main restricted universe multiverse
-EOF
-  echo /usr/lib/libeatmydata/libeatmydata.so | tee -a $DIR/etc/ld.so.preload
-  fakeroot fakechroot $DIR bash -c "apt-get update"
-  fakeroot fakechroot $DIR bash -c "apt-get install -qq -y --force-yes libatlas-dev libatlas-base-dev gfortran python3-dev python3-nose python3-pip cython3 cython"
+  sudo debootstrap --variant=buildd --include=fakeroot,build-essential --arch=$ARCH --foreign $DIST $DIR
+  sudo chroot $DIR ./debootstrap/debootstrap --second-stage
+  sudo rsync -a $TRAVIS_BUILD_DIR $DIR/
+  echo deb http://archive.ubuntu.com/ubuntu/ $DIST main restricted universe multiverse | sudo tee -a $DIR/etc/apt/sources.list
+  echo deb http://archive.ubuntu.com/ubuntu/ $DIST-updates main restricted universe multiverse | sudo tee -a $DIR/etc/apt/sources.list
+  echo deb http://security.ubuntu.com/ubuntu $DIST-security  main restricted universe multiverse | sudo tee -a $DIR/etc/apt/sources.list
+  sudo chroot $DIR bash -c "apt-get update"
+  sudo chroot $DIR bash -c "apt-get install -qq -y --force-yes eatmydata"
+  echo /usr/lib/libeatmydata/libeatmydata.so | sudo tee -a $DIR/etc/ld.so.preload
+  sudo chroot $DIR bash -c "apt-get install -qq -y --force-yes libatlas-dev libatlas-base-dev gfortran python3-dev python3-nose python3-pip cython3 cython"
 }
 
 setup_bento()
@@ -151,7 +147,7 @@ elif [ -n "$USE_CHROOT" ] && [ $# -eq 0 ]; then
   DIR="$HOME/chroot"
   setup_chroot $DIR
   # run again in chroot with this time testing
-  linux32 fakechroot $DIR bash -c "cd numpy && PYTHON=python3 PIP=pip3 IN_CHROOT=1 $0 test"
+  sudo linux32 chroot $DIR bash -c "cd numpy && PYTHON=python3 PIP=pip3 IN_CHROOT=1 $0 test"
 elif [ -n "$USE_BENTO" ] && [ $# -eq 0 ]; then
   setup_bento
   # run again this time testing
